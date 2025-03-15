@@ -1,0 +1,39 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+#cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+#game-over {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#game-over > h2 {
+    font-size: 2rem;
+    color: red;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+#game-over > p {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5%;
+    width: 50%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+}
+#game-over-character {
+    color: red;
+    font-weight: 600;
+}
+.play-again {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    width: 10%;
+    height: 6dvh;
+}
