@@ -29,9 +29,21 @@ img {
     font-family: "Bangers";
     transition: background-color 0.1s ease-in-out;
 }
-.card:hover {
+.card:hover{
     cursor: pointer;
     .character-name {
         background-color: red;
+    }
+}
+@media (max-width: 550px) {
+    .card {
+        width: 40%;
+        height: 15dvh
+    }
+    .card:hover {
+        cursor:auto;
+        .character-name {
+            background-color: orange
+        }
     }
 }

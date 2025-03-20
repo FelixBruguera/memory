@@ -161,6 +161,7 @@ body {
 .info-div {
     grid-area: 1 / 2 / 2 / 2;
     width: 100%;
+    border: none;
     padding: 0;
     background-color: transparent;
     transition: transform 0.15s ease-in-out;
@@ -195,5 +196,43 @@ body {
     }
     100% {
         background-color: white;
+    }
+}
+@media (max-width: 550px) {
+    :root {
+        font-size: 12px
+    }
+    #buttons {
+        flex-direction: row;
+    }
+    #scores {
+        flex-direction: row;
+    }
+    .header-item {
+        width: 25%;
+        height: 5dvh;
+    }
+    #header {
+        display: flex;
+        flex-direction: column;
+        height: 20dvh;
+    }
+    #title {
+        width: 80%;
+        font-size: 2rem;
+    }
+    #difficulty-buttons {
+        height: 20dvh;
+        width: 50dvw
+    }
+    .grid-button {
+        width: 100%
+    }
+    #game-over {
+        gap: 20px
+    }
+    #game-over > p {
+        font-size: 1.2rem;
+        gap: 3px;
     }
 }

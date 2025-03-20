@@ -41,3 +41,14 @@ dialog {
         opacity: 1;
     }
 }
+@media (max-width: 500px) {
+    dialog {
+        padding: 5%
+    }
+    .dialog-content {
+        min-width: 100%
+    }
+    .close-modal {
+        width: 10dvw
+    }
+}

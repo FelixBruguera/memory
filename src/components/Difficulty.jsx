@@ -11,7 +11,7 @@ const Difficulty = ({ multiplier, setMultiplier, reset }) => {
         </div>
     )
     return (
-        <Modal content={content} buttonClass="red-hover" buttonText="Difficulty" buttonIcon={icon}/>
+        <Modal content={content} buttonClass="header-item red-hover" buttonText="Difficulty" buttonIcon={icon}/>
     )
 }
 

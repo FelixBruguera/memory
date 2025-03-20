@@ -6,7 +6,7 @@ const Modal = ( {content, buttonClass, buttonText, buttonIcon} ) => {
     const showModal = () => dialog.current.showModal()
     return (
         <>
-        <button type="button" className={`header-item ${buttonClass}`} onClick={showModal}>
+        <button type="button" className={buttonClass} onClick={showModal}>
             {buttonIcon}
             {buttonText}
         </button>
