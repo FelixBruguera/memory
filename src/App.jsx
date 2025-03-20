@@ -1,20 +1,30 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Card from './components/Card'
-import Header from './components/Header'
 import './styles/App.css'
-import testdata from "./testdata.json"
+import "./styles/Modal.css"
+import Difficulty from './components/Difficulty'
+import HowToPlay from './components/HowToPlay'
+import Scores from './components/Scores'
+import Timer from './components/Timer'
 
 function App() {
   const [data, setData] = useState([])
   const [score, setScore] = useState(0)
   const [bestScore, setBestScore] = useState(0)
   const [clicks, setClicks] = useState([])
-  const [gameStatus, setGameStatus] = useState("playing")
+  const [gameStatus, setGameStatus] = useState({status: "playing", reason: "none"})
   const [lastPlay, setLastPlay] = useState(null)
+  const [level, setLevel] = useState(1)
+  const [multiplier, setMultiplier] = useState(1)
+  const [timerCount, setTimerCount] = useState(null)
+  let interval = useRef(null)
+  const API_URL = "https://dragonball-api.com/api/characters/?"
 
   useEffect(() => {
-    setData(testdata.items)
-  }, [])
+    fetch(`${API_URL}page=${level}`)
+    .then(response => response.json())
+    .then(data => setData(data.items))
+  }, [level])
 
   const shuffle = () => {
     let newIndexes = [...Array(data.length).keys()]
@@ -28,51 +38,102 @@ function App() {
     setData(newArray)
   }
 
+  const clearTimer = () => {
+    clearInterval(interval.current)
+    interval.current = null
+    setTimerCount(null)
+  }
+
+  useEffect(() => {
+    if (interval.current === null && timerCount > 0) {
+      interval.current = setInterval(() => {setTimerCount(prevtimer => prevtimer - 1)}, 1000) 
+    }
+    if (timerCount === 0) {
+      clearTimer()
+      setGameStatus({status: "loss", reason: "timeout"})
+    }
+  },[timerCount])
+  
+  const resetTimer = () => {
+    if (multiplier === 2) {setTimerCount(prev => 10)}
+    if (multiplier === 3) {setTimerCount(prev => 5)}
+  }
+
   const checkGameOver = (id) => clicks.some((num) => num === id)
 
+  const handleLevelUp = (newScore) => newScore === ((level * 10)*multiplier) ? setLevel(level + 1) : null
+
   const handePlay = (id) => {
-    if (checkGameOver(id)) { 
+    if (checkGameOver(id)) {
+      clearTimer()
       setLastPlay(id)
-      return setGameStatus("loss")}
-    let newScore = score + 1
+      return setGameStatus({status: "loss", reason: "click"})
+    }
+    let newScore = score + multiplier
     setScore(newScore)
     if (newScore > bestScore) { setBestScore(newScore)}
+    handleLevelUp(newScore)
     shuffle()
   }
 
   const handleClick = (id) => {
     let newClicks = clicks
     setClicks(newClicks.concat(id))
+    resetTimer()
     return handePlay(id)
   }
 
   const playAgain = () => {
-    setScore(0)
-    setClicks([])
-    setGameStatus("playing")
-    setLastPlay(null)
-    shuffle()
+    if (score > 0) {
+      setScore(0)
+      setClicks([])
+      setGameStatus("playing")
+      setLastPlay(null)
+      setLevel(1)
+      clearTimer()
+      shuffle()
+    }
   }
 
-  if (gameStatus === 'loss') {
+  if (gameStatus.status === 'loss') {
     const character = data.find((char) => char.id === lastPlay)
     return (
       <>
-      <Header score={score} bestScore={bestScore}/>
+      <section id="header">
+        <div id="buttons">
+            <Difficulty multiplier={multiplier} setMultiplier={setMultiplier} reset={playAgain}/>
+            <HowToPlay />
+            <Timer timerCount={timerCount} />
+        </div>
+        <h1 id="title">Dragon Ball Memory</h1>
+        <Scores level={level} score={score} bestScore={bestScore}/>
+      </section>
       <div id='game-over'>
         <h2>Game Over!</h2>
-        <p>You clicked on <p id="game-over-character">{character.name}</p> twice</p>
-        <button type='button' className='header-item play-again blue-hover' onClick={playAgain}>Play Again</button>
+        { gameStatus.reason === 'click' ?
+        <p>You clicked on <span id="game-over-character">{character.name}</span> twice</p>
+        :
+        <p>The timer ran out</p>
+        }
+        <button type='button' className='play-again blue-hover' onClick={playAgain}>Play Again</button>
       </div>
       </>
     )
   }
   return (
     <>
-     <Header score={score} bestScore={bestScore}/>
+      <section id="header">
+        <div id="buttons">
+            <Difficulty multiplier={multiplier} setMultiplier={setMultiplier} reset={playAgain}/>
+            <HowToPlay />
+            <Timer timerCount={timerCount}/>
+        </div>
+        <h1 id="title">Dragon Ball Memory</h1>
+        <Scores level={level} score={score} bestScore={bestScore}/>
+      </section>
      <section id="cards">
       {data.map((character) => 
-        <Card key={character.id} id={character.id}name={character.name} image={character.image} onClick={handleClick}/>
+        <Card key={character.id} id={character.id} name={character.name} image={character.image} onClick={handleClick}/>
         )}
       </section>
     </>
