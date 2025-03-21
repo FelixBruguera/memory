@@ -19,6 +19,7 @@ function App() {
   const [timerCount, setTimerCount] = useState(null)
   let interval = useRef(null)
   const API_URL = "https://dragonball-api.com/api/characters/?"
+  const MAX_CLICKS = 58
 
   useEffect(() => {
     fetch(`${API_URL}page=${level}`)
@@ -61,7 +62,13 @@ function App() {
 
   const checkGameOver = (id) => clicks.some((num) => num === id)
 
-  const handleLevelUp = (newScore) => newScore === ((level * 10)*multiplier) ? setLevel(level + 1) : null
+  const handleLevelUp = () => (score + multiplier) === ((level * 10)*multiplier) ? setLevel(level + 1) : null
+
+  const handleScores = () => {
+    let newScore = score + multiplier
+    setScore(newScore)
+    if (newScore > bestScore) { setBestScore(newScore)}
+  }
 
   const handePlay = (id) => {
     if (checkGameOver(id)) {
@@ -69,16 +76,19 @@ function App() {
       setLastPlay(id)
       return setGameStatus({status: "loss", reason: "click"})
     }
-    let newScore = score + multiplier
-    setScore(newScore)
-    if (newScore > bestScore) { setBestScore(newScore)}
-    handleLevelUp(newScore)
+    handleScores()
+    handleLevelUp()
     shuffle()
   }
 
   const handleClick = (id) => {
-    let newClicks = clicks
-    setClicks(newClicks.concat(id))
+    let newClicks = clicks.concat(id)
+    setClicks(newClicks)
+    if (newClicks.length === MAX_CLICKS) {
+      handleScores()
+      clearTimer()
+      return setGameStatus({status: "win"})
+    }
     resetTimer()
     return handePlay(id)
   }
@@ -94,47 +104,54 @@ function App() {
       shuffle()
     }
   }
+  const header = 
+    <section id="header">
+      <div id="buttons">
+        <Difficulty multiplier={multiplier} setMultiplier={setMultiplier} reset={playAgain}/>
+        <HowToPlay />
+        <Timer timerCount={timerCount}/>
+      </div>
+      <h1 id="title">Dragon Ball Memory</h1>
+      <Scores level={level} score={score} bestScore={bestScore}/>
+    </section>
+
+  if (gameStatus.status === 'win') {
+    return (
+      <>
+        {header}
+        <div id='game-over'>
+          <h2>You won!</h2>
+          { multiplier < 3 ? <p>Now try it with a higher difficulty</p> : null }
+          <button type='button' className='play-again blue-hover' onClick={playAgain}>Play Again</button>
+        </div>
+      </>
+    )
+  }
 
   if (gameStatus.status === 'loss') {
     const character = data.find((char) => char.id === lastPlay)
     return (
       <>
-      <section id="header">
-        <div id="buttons">
-            <Difficulty multiplier={multiplier} setMultiplier={setMultiplier} reset={playAgain}/>
-            <HowToPlay />
-            <Timer timerCount={timerCount} />
+        {header}
+        <div id='game-over'>
+          <h2>Game Over!</h2>
+          { gameStatus.reason === 'click' ?
+          <p>You clicked on <span id="game-over-character">{character.name}</span> twice</p>
+          :
+          <p>The timer ran out</p>
+          }
+          <button type='button' className='play-again blue-hover' onClick={playAgain}>Play Again</button>
         </div>
-        <h1 id="title">Dragon Ball Memory</h1>
-        <Scores level={level} score={score} bestScore={bestScore}/>
-      </section>
-      <div id='game-over'>
-        <h2>Game Over!</h2>
-        { gameStatus.reason === 'click' ?
-        <p>You clicked on <span id="game-over-character">{character.name}</span> twice</p>
-        :
-        <p>The timer ran out</p>
-        }
-        <button type='button' className='play-again blue-hover' onClick={playAgain}>Play Again</button>
-      </div>
       </>
     )
   }
   return (
     <>
-      <section id="header">
-        <div id="buttons">
-            <Difficulty multiplier={multiplier} setMultiplier={setMultiplier} reset={playAgain}/>
-            <HowToPlay />
-            <Timer timerCount={timerCount}/>
-        </div>
-        <h1 id="title">Dragon Ball Memory</h1>
-        <Scores level={level} score={score} bestScore={bestScore}/>
-      </section>
-     <section id="cards">
-      {data.map((character) => 
-        <Card key={character.id} id={character.id} name={character.name} image={character.image} onClick={handleClick}/>
-        )}
+      {header}
+      <section id="cards">
+        {data.map((character) => 
+          <Card key={character.id} id={character.id} name={character.name} image={character.image} onClick={handleClick}/>
+          )}
       </section>
     </>
   )

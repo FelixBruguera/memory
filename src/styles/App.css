@@ -101,8 +101,8 @@ body {
     text-align: center;
     width: 35dvw;
 }
-.yellow-hover:hover {
-    background-color: yellow;
+.orange-hover:hover {
+    background-color: orange;
     cursor: pointer;
 }
 .red-hover:hover {
