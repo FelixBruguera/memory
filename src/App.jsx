@@ -56,8 +56,8 @@ function App() {
   },[timerCount])
   
   const resetTimer = () => {
-    if (multiplier === 2) {setTimerCount(prev => 10)}
-    if (multiplier === 3) {setTimerCount(prev => 5)}
+    if (multiplier === 2) {setTimerCount(10)}
+    if (multiplier === 3) {setTimerCount(5)}
   }
 
   const checkGameOver = (id) => clicks.some((num) => num === id)
@@ -111,7 +111,7 @@ function App() {
         <HowToPlay />
         <Timer timerCount={timerCount}/>
       </div>
-      <h1 id="title">Dragon Ball Memory</h1>
+      <h1 className="title">Dragon Ball Memory</h1>
       <Scores level={level} score={score} bestScore={bestScore}/>
     </section>
 

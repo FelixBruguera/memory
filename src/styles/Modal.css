@@ -5,9 +5,10 @@ dialog {
     width: fit-content;
     height: fit-content;
     animation: fade-in 0.2s ease-in-out;
+    background-color: rgba(250, 250, 250, 0.9);
 }
 ::backdrop {
-    background-color: rgba(0,0,0,0.75);
+    background-color: rgba(0,0,0,0.8);
     backdrop-filter: blur(3px);
   }
 .dialog-content {
@@ -46,9 +47,10 @@ dialog {
         padding: 5%
     }
     .dialog-content {
-        min-width: 100%
+        min-width: 100%;
     }
     .close-modal {
-        width: 10dvw
+        width: fit-content;
+        padding: 0 2rem    
     }
 }

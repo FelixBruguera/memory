@@ -1,21 +1,32 @@
 import Modal from "./Modal"
 
+
 const DifficultyButton = ({ buttonMultiplier, multiplier, setMultiplier, title, reset}) => {
-    const buttonInfo = {1: "No timer and no score multiplier", 2: "Adds a 10 second timer, the score is multiplied by 2",
-        3: "Adds a 5 second timer, the score is multiplied by 3"}
+    const buttonInfo = {1: ["No timer", "No score multiplier"], 2: ["10 second timer", "2x score multiplier"],
+        3: ["5 second timer", "3x score multiplier"]}
     const handleClick = () => {
         setMultiplier(buttonMultiplier)
         reset()
     }
-    const infoContent = <p>{buttonInfo[buttonMultiplier]}</p>
-    const infoIcon = <svg className="difficulty-info" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg>
+    const icons = new Array(buttonMultiplier).fill(0)
+    const icon = <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ff0000ff"><title>star</title><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z" /></svg>
 
     return (
         <div className="grid-button">
              <button type="button" id={multiplier === buttonMultiplier ? 'selected-item': null} 
-                 className="difficulty-item" onClick={handleClick}> {title} 
+            className="difficulty-item" onClick={handleClick}> 
+                 <div>
+                    <ul className="stars">
+                        {icons.map(() => <li className="star">{icon}</li>)}
+                    </ul>
+                     <h3 className="difficulty-title">{title}</h3>
+                     <ul className="difficulty-list">
+                        {buttonInfo[buttonMultiplier].map(item => 
+                            <li className="difficulty-listitem">{item}</li>
+                        )}
+                     </ul>
+                 </div>
             </button>
-            <Modal content={infoContent} buttonClass="info-div" buttonIcon={infoIcon}/>
         </div>
     )
 }

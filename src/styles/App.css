@@ -41,6 +41,7 @@ body {
     background-color: var(--main-color);
     color: white;
     font-weight: 600;
+    border-radius: 5px;
 }
 #header {
     display: grid;
@@ -54,7 +55,7 @@ body {
     justify-items: center;
     align-items: center;
 }
-#title {
+.title {
     grid-area: 1 / 2 / 2 / 3;
     text-align: center;
     font-family: "Bangers";
@@ -93,6 +94,8 @@ body {
     width: 30%;
     background-color: white;
     height: 40%;
+    max-height: 50px;
+    max-width: 150px;
     font-size: 0.875rem;
     border-radius: 5px;
     transition: background-color 0.1s ease-in-out;
@@ -123,27 +126,69 @@ body {
     overflow: hidden;
 }
 #difficulty-buttons {
-    height: 20dvh;
-    width: 20dvw;
+    height: fit-content;
+    max-height: 40dvh;
+    width: 50dvw;
+    display: flex;
+    align-items: center;
+}
+.difficulty-title {
+    font-family: "Bangers";
+    font-weight: 500;
+    color: black;
+}
+.difficulty-list {
+    list-style: none;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 0;
+}
+.difficulty-listitem {
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.75);
 }
 .difficulty-item {
     grid-area: 1 / 1 / 2 / 3;
     border: 1px solid rgba(0,0,0,0.35);
-    width: 70%;
-    height: 90%;
-    font-family: "Bangers";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 85%;
+    max-width: 350px;
+    height: 25dvh;
+    border-radius: 100%;
+    font-family: "Roboto";
     font-size: 1.38rem;
     font-weight: 500;
     background-color: white;
+    background-color: orange;
+    border: none;
+    transition: box-shadow 0.2s ease-in-out;
+}
+.stars {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    list-style: none;
+    padding: 0;
+}
+.star {
+    fill: red;
+    height: 2dvh;
+    width: 2dvw;
+}
+.start::before {
+    transform: rotate(5deg);
 }
 .difficulty-item:hover {
-    background-color: red;
+    box-shadow: steelblue 2px 2px 50px 3px;
     cursor: pointer;
 }
 #selected-item {
-    background-color: orange;
+    border-color: blue;
+    box-shadow: blue 2px 2px 50px 5px;
 }
 .grid-button {
     margin-left: auto;
@@ -198,7 +243,7 @@ body {
         background-color: white;
     }
 }
-@media (max-width: 550px) {
+@media (max-width: 850px) {
     :root {
         font-size: 12px
     }
@@ -222,8 +267,12 @@ body {
         font-size: 2rem;
     }
     #difficulty-buttons {
+        height: fit-content;
+        width: 90dvw
+    }
+    .difficulty-item {
         height: 20dvh;
-        width: 50dvw
+        width: 95%;
     }
     .grid-button {
         width: 100%
